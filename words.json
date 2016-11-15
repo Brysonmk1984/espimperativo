@@ -1,0 +1,9 @@
+[,
+    {"id" : 1, "english" : "where", "spanish" : "donde"}
+    {"id" : 2, "english" : "how", "spanish" : "como"},
+    {"id" : 3, "english" : "open", "spanish" : "abierto"},
+    {"id" : 4, "english" : "closed", "spanish" : "cerrado"},
+    {"id" : 5, "english" : "same", "spanish" : "mismo"},
+    {"id" : 6, "english" : "what kind?", "spanish" : "que tipo de?"}
+    
+]
