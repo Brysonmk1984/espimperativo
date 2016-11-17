@@ -34,6 +34,7 @@ header strong{
 .card{
     list-style: none;
     display: block;
+    visibility:hidden;
     position: absolute;
     width: 700px;
     height: 420px;
@@ -42,11 +43,24 @@ header strong{
     top:100px;
     font-weight: bold;
     cursor: pointer;
-    border: solid 1px black;
-    background-color:white;
     text-align:center;
-    font-size: 1.2em;
+    
+    
+}
+.card:first-child{
+    visibility:visible;
+}
+.card_text{
     line-height:420px;
+    font-size: 1.2em;
+}
+.card_count{
+    display:block;
+    position:absolute;
+    top:10px;
+    right:10px;
+    opacity:.2;
+    font-size:.7em;
 }
 #console{
     width:700px;
@@ -90,4 +104,53 @@ footer{
 }
 #footerText a{
     color:#FEE5AC;
+}
+
+
+/* Flipper Styles */
+
+/* entire container, keeps perspective */
+.flip-container {
+	perspective: 1000px;
+}
+
+/* flip the pane when hovered */
+.flip-container.spanish .flipper {
+	transform: rotateY(180deg);
+}
+
+.flip-container, .front, .back {
+	width: 700px;
+	height: 420px;
+}
+
+/* flip speed goes here */
+.flipper {
+	transition: 0.5s;
+	transform-style: preserve-3d;
+    width: 700px;
+	height: 420px;
+	border: solid 1px black;
+    background-color:white;
+	position: relative;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+	backface-visibility: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+	z-index: 2;
+	/* for firefox 31 */
+	transform: rotateY(0deg);
+}
+
+/* back, initially hidden pane */
+.back {
+	transform: rotateY(180deg);
 }

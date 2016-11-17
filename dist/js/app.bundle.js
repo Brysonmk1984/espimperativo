@@ -21482,7 +21482,7 @@
 	        var _this = _possibleConstructorReturn(this, (Layout.__proto__ || Object.getPrototypeOf(Layout)).call(this));
 
 	        _this.state = {
-	            items: [_react2.default.createElement(_Card2.default, { key: "0", data: { "id": 0, "english": "loading", "spanish": "cargando" } })]
+	            data: [{ "id": 1, "english": "loading", "spanish": "cargando", "flipped": false }]
 	        };
 
 	        return _this;
@@ -21501,9 +21501,7 @@
 	                    var data = JSON.parse(request.responseText);
 
 	                    that.setState({
-	                        items: data.map(function (card) {
-	                            return _react2.default.createElement(_Card2.default, { key: card.id, data: card });
-	                        })
+	                        data: data
 	                    });
 	                } else {
 	                    // We reached our target server, but it returned an error
@@ -21523,33 +21521,65 @@
 	        value: function componentDidMount() {
 	            var _this2 = this;
 
+	            /*setTimeout(()=>{
+	                this.flipCard();
+	            },500);
+	            setTimeout(()=>{
+	                this.flipCard();
+	            },1000);*/
 	            setTimeout(function () {
 	                _this2.fetch.call(_this2);
 	            }, 2000);
+
+	            console.log('state data', this.state.data);
 	        }
 	    }, {
 	        key: "prevCard",
 	        value: function prevCard() {
-	            var cardArray = this.state.items;
-	            cardArray.push(cardArray.splice(0, 1)[0]);
-	            this.setState({ items: cardArray });
+	            var data = this.state.data;
+	            data.unshift(data.splice(data.length - 1, 1)[0]);
+	            this.setState({ data: data });
 	        }
 	    }, {
 	        key: "nextCard",
 	        value: function nextCard() {
-	            var cardArray = this.state.items;
-	            cardArray.unshift(cardArray.splice(cardArray.length - 1, 1)[0]);
-	            this.setState({ items: cardArray });
+	            var data = this.state.data;
+	            data.push(data.splice(0, 1)[0]);
+	            this.setState({ data: data });
+	        }
+	    }, {
+	        key: "flipCard",
+	        value: function flipCard() {
+	            var data = this.state.data;
+	            data[0].flipped = data[0].flipped === true ? false : true;
+	            this.setState({ data: data });
 	        }
 	    }, {
 	        key: "render",
 	        value: function render() {
+	            // Arrow key Functionality
+	            function keyClick(e) {
+	                // left arrow click
+	                if (e.keyCode == '37' || e.keyCode == '65') {
+	                    this.prevCard();
+	                    // right arrow click
+	                } else if (e.keyCode == '39' || e.keyCode == '68') {
+	                    this.nextCard();
+	                    // space bar
+	                } else if (e.keyCode == '32' || e.keyCode == '38' || e.keyCode == '40' || e.keyCode == '83' || e.keyCode == '87') {
+	                    e.preventDefault();
+	                    e.stopPropagation();
+	                    this.flipCard();
+	                }
+	            }
+	            document.onkeydown = keyClick.bind(this);
+
 	            return _react2.default.createElement(
 	                "div",
 	                { id: "app" },
 	                _react2.default.createElement(_Header2.default, null),
-	                _react2.default.createElement(_CardContainer2.default, { cards: this.state.items }),
-	                _react2.default.createElement(_Console2.default, { prev: this.prevCard.bind(this), next: this.nextCard.bind(this) }),
+	                _react2.default.createElement(_CardContainer2.default, { data: this.state.data, flip: this.flipCard.bind(this), totalCards: this.state.data.length }),
+	                _react2.default.createElement(_Console2.default, { prev: this.prevCard.bind(this), next: this.nextCard.bind(this), flip: this.flipCard.bind(this) }),
 	                _react2.default.createElement(_Footer2.default, null)
 	            );
 	        }
@@ -21653,10 +21683,16 @@
 	    _createClass(CardContainer, [{
 	        key: "render",
 	        value: function render() {
+	            var _this2 = this;
+
+	            var cardNodes = this.props.data.map(function (card) {
+	                return _react2.default.createElement(_Card2.default, { key: card.id, data: card, spanish: false, flip: _this2.props.flip, totalCards: _this2.props.totalCards });
+	            });
+
 	            return _react2.default.createElement(
 	                "ul",
 	                { id: "cardContainer" },
-	                this.props.cards
+	                cardNodes
 	            );
 	        }
 	    }]);
@@ -21670,7 +21706,7 @@
 /* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -21700,14 +21736,49 @@
 	    }
 
 	    _createClass(Card, [{
-	        key: "render",
+	        key: 'render',
 	        value: function render() {
+	            var classes = 'flip-container card ' + (this.props.data.flipped ? 'spanish' : 'english');
+
 	            return _react2.default.createElement(
-	                "li",
-	                { id: "card" + this.props.data.id, key: this.props.data.id, className: "card" },
-	                this.props.data.english,
-	                " - ",
-	                this.props.data.spanish
+	                'li',
+	                { id: "card" + this.props.data.id, key: this.props.data.id, className: classes, onClick: this.props.flip },
+	                _react2.default.createElement(
+	                    'div',
+	                    { className: 'flipper' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'front' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'card_count' },
+	                            this.props.data.id,
+	                            ' / ',
+	                            this.props.totalCards
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'card_text' },
+	                            this.props.data.english
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'back' },
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'card_count' },
+	                            this.props.data.id,
+	                            ' / ',
+	                            this.props.totalCards
+	                        ),
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'card_text' },
+	                            this.props.data.spanish
+	                        )
+	                    )
+	                )
 	            );
 	        }
 	    }]);
@@ -21763,7 +21834,7 @@
 	                ),
 	                _react2.default.createElement(
 	                    "button",
-	                    { id: "flipButton" },
+	                    { id: "flipButton", onClick: this.props.flip },
 	                    "Flip"
 	                ),
 	                _react2.default.createElement(
