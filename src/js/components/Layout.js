@@ -76,6 +76,23 @@ export default class Layout extends React.Component{
         this.setState({data : data});
     }
     
+    flipAll(){
+        let data = this.state.data;
+        data = data.map(function(item){
+            item.flipped = !item.flipped;
+            return item;
+        });
+        this.setState({data : data});
+    }
+    
+    randomize(){
+        let data = this.state.data,
+            total = data.length;
+        
+        for(var j, x, i = data.length; i; j = parseInt(Math.random() * i), x = data[--i], data[i] = data[j], data[j] = x);
+        
+        this.setState({data : data});
+    }
     
     render(){
         // Arrow key Functionality
@@ -97,7 +114,7 @@ export default class Layout extends React.Component{
 
         return (
             <div id="app">
-                <Header />
+                <Header flipAll={this.flipAll.bind(this)} randomize={this.randomize.bind(this)} />
                 <CardContainer data={this.state.data} flip={this.flipCard.bind(this)} totalCards={this.state.data.length} />
                 <Console prev={this.prevCard.bind(this)} next={this.nextCard.bind(this)} flip={this.flipCard.bind(this)} />
                 <Footer />

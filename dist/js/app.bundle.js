@@ -21555,6 +21555,26 @@
 	            this.setState({ data: data });
 	        }
 	    }, {
+	        key: "flipAll",
+	        value: function flipAll() {
+	            var data = this.state.data;
+	            data = data.map(function (item) {
+	                item.flipped = !item.flipped;
+	                return item;
+	            });
+	            this.setState({ data: data });
+	        }
+	    }, {
+	        key: "randomize",
+	        value: function randomize() {
+	            var data = this.state.data,
+	                total = data.length;
+
+	            for (var j, x, i = data.length; i; j = parseInt(Math.random() * i), x = data[--i], data[i] = data[j], data[j] = x) {}
+
+	            this.setState({ data: data });
+	        }
+	    }, {
 	        key: "render",
 	        value: function render() {
 	            // Arrow key Functionality
@@ -21577,7 +21597,7 @@
 	            return _react2.default.createElement(
 	                "div",
 	                { id: "app" },
-	                _react2.default.createElement(_Header2.default, null),
+	                _react2.default.createElement(_Header2.default, { flipAll: this.flipAll.bind(this), randomize: this.randomize.bind(this) }),
 	                _react2.default.createElement(_CardContainer2.default, { data: this.state.data, flip: this.flipCard.bind(this), totalCards: this.state.data.length }),
 	                _react2.default.createElement(_Console2.default, { prev: this.prevCard.bind(this), next: this.nextCard.bind(this), flip: this.flipCard.bind(this) }),
 	                _react2.default.createElement(_Footer2.default, null)
@@ -21633,6 +21653,20 @@
 	                    "strong",
 	                    null,
 	                    "espa\xF1ol - Imperativo"
+	                ),
+	                _react2.default.createElement(
+	                    "div",
+	                    { id: "headerButtonContainer" },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "button_wrapper", title: "Randomize cards", onClick: this.props.randomize },
+	                        _react2.default.createElement("fa", { className: "fa fa-random fa-lg" })
+	                    ),
+	                    _react2.default.createElement(
+	                        "div",
+	                        { className: "button_wrapper", title: "Flip all cards", onClick: this.props.flipAll },
+	                        _react2.default.createElement("fa", { className: "fa fa-retweet fa-lg" })
+	                    )
 	                )
 	            );
 	        }
@@ -21828,19 +21862,42 @@
 	                "div",
 	                { id: "console" },
 	                _react2.default.createElement(
-	                    "button",
-	                    { id: "prevButton", onClick: this.props.prev },
-	                    "Previous"
+	                    "div",
+	                    null,
+	                    _react2.default.createElement(
+	                        "button",
+	                        { id: "prevButton", onClick: this.props.prev },
+	                        "Previous"
+	                    ),
+	                    _react2.default.createElement(
+	                        "button",
+	                        { id: "flipButton", onClick: this.props.flip },
+	                        "Flip"
+	                    ),
+	                    _react2.default.createElement(
+	                        "button",
+	                        { id: "nextButton", onClick: this.props.next },
+	                        "Next"
+	                    )
 	                ),
 	                _react2.default.createElement(
-	                    "button",
-	                    { id: "flipButton", onClick: this.props.flip },
-	                    "Flip"
-	                ),
-	                _react2.default.createElement(
-	                    "button",
-	                    { id: "nextButton", onClick: this.props.next },
-	                    "Next"
+	                    "div",
+	                    { id: "hotkeySection" },
+	                    _react2.default.createElement(
+	                        "div",
+	                        { id: "hotkeysPrev", className: "hotkey_description" },
+	                        "left arrow, \"a\""
+	                    ),
+	                    _react2.default.createElement(
+	                        "div",
+	                        { id: "hotkeysFlip", className: "hotkey_description" },
+	                        "up arrow, down arrow, \"w\", \"s\" "
+	                    ),
+	                    _react2.default.createElement(
+	                        "div",
+	                        { id: "hotkeysNext", className: "hotkey_description" },
+	                        "right arrow, \"d\""
+	                    )
 	                )
 	            );
 	        }
